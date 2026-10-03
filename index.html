@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asset Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        /* Color Variables */
+        :root {
+            --primary: #047857;
+            --primary-dark: #065f46;
+            --accent: #d4af37;
+            --danger: #dc2626;
+            --success: #10b981;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --bg-light: #f9fafb;
+            --border: #e5e7eb;
+        }
+
+        /* Login Page */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #065f46 0%, #047857 100%);
+        }
+
+        .login-card {
+            background: white;
+            padding: 3rem;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 420px;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-logo h1 {
+            color: var(--primary-dark);
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-logo p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(4, 120, 87, 0.1);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(4, 120, 87, 0.2);
+        }
+
+        .btn-accent {
+            background: var(--accent);
+            color: var(--text-dark);
+        }
+
+        .btn-accent:hover {
+            background: #c9a227;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+
+        .btn-secondary {
+            background: var(--bg-light);
+            color: var(--text-dark);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: #f3f4f6;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        /* Main Layout */
+        .main-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: var(--text-dark);
+            color: white;
+            padding: 2rem 0;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-logo {
+            padding: 0 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-logo h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin: 0;
+        }
+
+        .sidebar-menu a {
+            display: block;
+            padding: 1rem 1.5rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: var(--primary);
+            color: white;
+            border-left-color: var(--accent);
+            padding-left: calc(1.5rem - 3px);
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 2rem;
+        }
+
+        .topbar {
+            background: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .topbar h2 {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+
+        .topbar-user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-info p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .user-info strong {
+            color: var(--text-dark);
+        }
+
+        /* Dashboard Cards */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-stat {
+            text-align: center;
+        }
+
+        .card-stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 1rem 0;
+        }
+
+        .card-stat-label {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .card-stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Tables */
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table thead {
+            background: var(--bg-light);
+            border-bottom: 2px solid var(--border);
+        }
+
+        table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 0.9rem;
+        }
+
+        table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-dark);
+        }
+
+        table tbody tr:hover {
+            background: #f9fafb;
+        }
+
+        /* Status Badge */
+        .badge {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-progress {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-completed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-available {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-in-use {
+            background: #fed7aa;
+            color: #92400e;
+        }
+
+        .badge-repair {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* Forms */
+        .form-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-section h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 2rem;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 1rem;
+            background: var(--bg-light);
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-light);
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .tab-button.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .tab-button:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s ease;
+        }
+
+        .modal-header {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            justify-content: flex-end;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            background: var(--success);
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            animation: slideIn 0.3s ease;
+            z-index: 2000;
+        }
+
+        .toast.error {
+            background: var(--danger);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-light);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Charts/Bars */
+        .chart-bar {
+            display: flex;
+            align-items: flex-end;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .bar-item {
+            flex: 1;
+            text-align: center;
+        }
+
+        .bar {
+            background: linear-gradient(180deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 0.5rem;
+            min-height: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .bar:hover {
+            opacity: 0.8;
+            transform: scaleY(1.05);
+        }
+
+        .bar-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+
+            .main-content {
+                margin-left: 200px;
+                padding: 1rem;
+            }
+
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 1rem;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+
+            .sidebar-menu a {
+                display: inline-block;
+                padding: 0.5rem 1rem;
+            }
+
+            .login-card {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+        <div class="login-card">
+            <div class="login-logo">
+                <h1>📊 AMS</h1>
+                <p>Asset Management System</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter your username" required>
+                </div>
+                <div class="form-group">
+                    <label for="role">Select Role</label>
+                    <select id="role" required>
+                        <option value="">-- Choose Role --</option>
+                        <option value="employee">Employee</option>
+                        <option value="executive">Executive</option>
+                        <option value="admin">Admin</option>
+                        <option value="technician">Technician</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Employee View -->
+    <div id="employeePage" class="main-layout" style="display:none;">
+        <div class="sidebar">
+            <div class="sidebar-logo">
+                <h2>📊 AMS</h2>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a class="menu-link active" data-view="tickets">My Tickets</a></li>
+                <li><a class="logout-btn">Logout</a></li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <div class="topbar">
+                <h2>Employee Dashboard</h2>
+                <div class="topbar-user">
+                    <div class="user-info">
+                        <p>Welcome, <strong id="empUsername"></strong></p>
+                        <p id="empRole" style="font-size: 0.8rem; color: var(--text-light);"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ticket Creation Form -->
+            <div class="form-section">
+                <h3>Create Asset Request</h3>
+                <form id="employeeTicketForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="ticketTitle">Title</label>
+                            <input type="text" id="ticketTitle" placeholder="Enter request title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="ticketType">Type</label>
+                            <select id="ticketType" required>
+                                <option value="">-- Select Type --</option>
+                                <option value="request">Request Asset</option>
+                                <option value="repair">Repair Request</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="ticketDescription">Description</label>
+                            <textarea id="ticketDescription" placeholder="Describe your request in detail..." required></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Request</button>
+                </form>
+            </div>
+
+            <!-- Tickets List -->
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="employeeTicketsList">
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: var(--text-light);">No tickets yet</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Executive View -->
+    <div id="executivePage" class="main-layout" style="display:none;">
+        <div class="sidebar">
+            <div class="sidebar-logo">
+                <h2>📊 AMS</h2>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a class="menu-link active" data-view="dashboard">Dashboard</a></li>
+                <li><a class="menu-link" data-view="reports">Reports</a></li>
+                <li><a class="logout-btn">Logout</a></li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <div class="topbar">
+                <h2>Executive Dashboard</h2>
+                <div class="topbar-user">
+                    <div class="user-info">
+                        <p>Welcome, <strong id="execUsername"></strong></p>
+                        <p id="execRole" style="font-size: 0.8rem; color: var(--text-light);">Executive</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard View -->
+            <div id="execDashboardView">
+                <div class="dashboard-grid">
+                    <div class="card card-stat">
+                        <div class="card-stat-icon">📦</div>
+                        <div class="card-stat-label">Total Assets</div>
+                        <div class="card-stat-value" id="execTotalAssets">0</div>
+                    </div>
+                    <div class="card card-stat">
+                        <div class="card-stat-icon">✅</div>
+                        <div class="card-stat-label">In Use</div>
+                        <div class="card-stat-value" id="execInUse">0</div>
+                    </div>
+                    <div class="card card-stat">
+                        <div class="card-stat-icon">🔧</div>
+                        <div class="card-stat-label">In Repair</div>
+                        <div class="card-stat-value" id="execInRepair">0</div>
+                    </div>
+                    <div class="card card-stat">
+                        <div class="card-stat-icon">📥</div>
+                        <div class="card-stat-label">Available</div>
+                        <div class="card-stat-value" id="execAvailable">0</div>
+                    </div>
+                </div>
+
+                <!-- Category Summary -->
+                <div class="form-section">
+                    <h3>Asset Distribution by Category</h3>
+                    <div id="execCategoryChart"></div>
+                </div>
+
+                <!-- Status Summary -->
+                <div class="form-section">
+                    <h3>Tickets Summary</h3>
+                    <div class="dashboard-grid">
+                        <div class="card card-stat">
+                            <div class="card-stat-icon">⏳</div>
+                            <div class="card-stat-label">Pending</div>
+                            <div class="card-stat-value" id="execPendingTickets">0</div>
+                        </div>
+                        <div class="card card-stat">
+                            <div class="card-stat-icon">⚙️</div>
+                            <div class="card-stat-label">In Progress</div>
+                            <div class="card-stat-value" id="execProgressTickets">0</div>
+                        </div>
+                        <div class="card card-stat">
+                            <div class="card-stat-icon">✔️</div>
+                            <div class="card-stat-label">Completed</div>
+                            <div class="card-stat-value" id="execCompletedTickets">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports View -->
+            <div id="execReportsView" style="display:none;">
+                <div class="form-section">
+                    <h3>Asset Reports</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Asset Name</th>
+                                    <th>Category</th>
+                                    <th>Status</th>
+                                    <th>Added Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="execAssetReport">
+                                <tr>
+                                    <td colspan="4" style="text-align: center; color: var(--text-light);">No assets</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin View -->
+    <div id="adminPage" class="main-layout" style="display:none;">
+        <div class="sidebar">
+            <div class="sidebar-logo">
+                <h2>📊 AMS</h2>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a class="menu-link active" data-tab="assets">Asset Management</a></li>
+                <li><a class="menu-link" data-tab="users">User Management</a></li>
+                <li><a class="menu-link" data-tab="tickets">Ticket Management</a></li>
+                <li><a class="logout-btn">Logout</a></li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <div class="topbar">
+                <h2>Admin Panel</h2>
+                <div class="topbar-user">
+                    <div class="user-info">
+                        <p>Welcome, <strong id="adminUsername"></strong></p>
+                        <p id="adminRole" style="font-size: 0.8rem; color: var(--text-light);">Administrator</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Asset Management Tab -->
+            <div id="assetsTab" class="admin-tab active">
+                <div class="form-section">
+                    <h3>Add New Asset</h3>
+                    <form id="adminAssetForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="assetName">Asset Name</label>
+                                <input type="text" id="assetName" placeholder="e.g., MacBook Pro 16" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="assetCategory">Category</label>
+                                <select id="assetCategory" required>
+                                    <option value="">-- Select Category --</option>
+                                    <option value="laptop">Laptop</option>
+                                    <option value="printer">Printer</option>
+                                    <option value="monitor">Monitor</option>
+                                    <option value="equipment">Equipment</option>
+                                    <option value="furniture">Furniture</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="assetStatus">Status</label>
+                                <select id="assetStatus" required>
+                                    <option value="available">Available</option>
+                                    <option value="in-use">In Use</option>
+                                    <option value="repair">In Repair</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Asset</button>
+                    </form>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Asset Name</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                                <th>Date Added</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminAssetsList">
+                            <tr>
+                                <td colspan="5" style="text-align: center; color: var(--text-light);">No assets</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- User Management Tab -->
+            <div id="usersTab" class="admin-tab" style="display:none;">
+                <div class="form-section">
+                    <h3>Add New User</h3>
+                    <form id="adminUserForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="userName">Username</label>
+                                <input type="text" id="userName" placeholder="username" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="userRole">Role</label>
+                                <select id="userRole" required>
+                                    <option value="employee">Employee</option>
+                                    <option value="technician">Technician</option>
+                                    <option value="executive">Executive</option>
+                                    <option value="admin">Admin</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add User</button>
+                    </form>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Role</th>
+                                <th>Date Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminUsersList">
+                            <tr>
+                                <td colspan="4" style="text-align: center; color: var(--text-light);">No users</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Ticket Management Tab -->
+            <div id="ticketsTab" class="admin-tab" style="display:none;">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Title</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminTicketsList">
+                            <tr>
+                                <td colspan="6" style="text-align: center; color: var(--text-light);">No tickets</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Technician View -->
+    <div id="technicianPage" class="main-layout" style="display:none;">
+        <div class="sidebar">
+            <div class="sidebar-logo">
+                <h2>📊 AMS</h2>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a class="menu-link active" data-view="tickets">Work Orders</a></li>
+                <li><a class="logout-btn">Logout</a></li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <div class="topbar">
+                <h2>Technician Dashboard</h2>
+                <div class="topbar-user">
+                    <div class="user-info">
+                        <p>Welcome, <strong id="techUsername"></strong></p>
+                        <p id="techRole" style="font-size: 0.8rem; color: var(--text-light);">Technician</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Work Orders -->
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Title</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="techTicketsList">
+                        <tr>
+                            <td colspan="6" style="text-align: center; color: var(--text-light);">No work orders</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Asset Modal -->
+    <div id="editAssetModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">Edit Asset</div>
+            <form id="editAssetForm">
+                <div class="form-group">
+                    <label for="editAssetName">Asset Name</label>
+                    <input type="text" id="editAssetName" required>
+                </div>
+                <div class="form-group">
+                    <label for="editAssetCategory">Category</label>
+                    <select id="editAssetCategory" required>
+                        <option value="laptop">Laptop</option>
+                        <option value="printer">Printer</option>
+                        <option value="monitor">Monitor</option>
+                        <option value="equipment">Equipment</option>
+                        <option value="furniture">Furniture</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editAssetStatus">Status</label>
+                    <select id="editAssetStatus" required>
+                        <option value="available">Available</option>
+                        <option value="in-use">In Use</option>
+                        <option value="repair">In Repair</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="closeEditAssetModal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div id="editUserModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">Edit User</div>
+            <form id="editUserForm">
+                <div class="form-group">
+                    <label for="editUserName">Username</label>
+                    <input type="text" id="editUserName" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="editUserRole">Role</label>
+                    <select id="editUserRole" required>
+                        <option value="employee">Employee</option>
+                        <option value="technician">Technician</option>
+                        <option value="executive">Executive</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="closeEditUserModal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // ==================== DATA MANAGEMENT ====================
+        class DataManager {
+            constructor() {
+                this.initializeData();
+            }
+
+            initializeData() {
+                if (!localStorage.getItem('amsData')) {
+                    const initialData = {
+                        assets: [
+                            { id: 1, name: 'MacBook Pro 16', category: 'laptop', status: 'available', dateAdded: this.getCurrentDate() },
+                            { id: 2, name: 'Dell Monitor', category: 'monitor', status: 'in-use', dateAdded: this.getCurrentDate() },
+                            { id: 3, name: 'HP Printer', category: 'printer', status: 'repair', dateAdded: this.getCurrentDate() }
+                        ],
+                        users: [
+                            { id: 1, username: 'john', role: 'employee', dateCreated: this.getCurrentDate() },
+                            { id: 2, username: 'sarah', role: 'technician', dateCreated: this.getCurrentDate() },
+                            { id: 3, username: 'mike', role: 'executive', dateCreated: this.getCurrentDate() }
+                        ],
+                        tickets: [
+                            { id: 1, userId: 'john', username: 'john', title: 'Need new keyboard', type: 'request', description: 'Keyboard not working', status: 'pending', dateCreated: this.getCurrentDate() },
+                            { id: 2, userId: 'sarah', username: 'sarah', title: 'Monitor repair', type: 'repair', description: 'Screen flickering', status: 'in-progress', dateCreated: this.getCurrentDate() }
+                        ]
+                    };
+                    localStorage.setItem('amsData', JSON.stringify(initialData));
+                }
+            }
+
+            getCurrentDate() {
+                return new Date().toLocaleDateString('en-US');
+            }
+
+            getData() {
+                return JSON.parse(localStorage.getItem('amsData'));
+            }
+
+            saveData(data) {
+                localStorage.setItem('amsData', JSON.stringify(data));
+            }
+
+            // Asset methods
+            addAsset(name, category, status) {
+                const data = this.getData();
+                const id = Math.max(...data.assets.map(a => a.id), 0) + 1;
+                data.assets.push({ id, name, category, status, dateAdded: this.getCurrentDate() });
+                this.saveData(data);
+                return id;
+            }
+
+            getAssets() {
+                return this.getData().assets;
+            }
+
+            updateAsset(id, name, category, status) {
+                const data = this.getData();
+                const asset = data.assets.find(a => a.id === id);
+                if (asset) {
+                    asset.name = name;
+                    asset.category = category;
+                    asset.status = status;
+                    this.saveData(data);
+                }
+            }
+
+            deleteAsset(id) {
+                const data = this.getData();
+                data.assets = data.assets.filter(a => a.id !== id);
+                this.saveData(data);
+            }
+
+            // User methods
+            addUser(username, role) {
+                const data = this.getData();
+                const id = Math.max(...data.users.map(u => u.id), 0) + 1;
+                data.users.push({ id, username, role, dateCreated: this.getCurrentDate() });
+                this.saveData(data);
+                return id;
+            }
+
+            getUsers() {
+                return this.getData().users;
+            }
+
+            updateUser(id, role) {
+                const data = this.getData();
+                const user = data.users.find(u => u.id === id);
+                if (user) {
+                    user.role = role;
+                    this.saveData(data);
+                }
+            }
+
+            deleteUser(id) {
+                const data = this.getData();
+                data.users = data.users.filter(u => u.id !== id);
+                this.saveData(data);
+            }
+
+            // Ticket methods
+            addTicket(userId, username, title, type, description) {
+                const data = this.getData();
+                const id = Math.max(...data.tickets.map(t => t.id), 0) + 1;
+                data.tickets.push({ id, userId, username, title, type, description, status: 'pending', dateCreated: this.getCurrentDate() });
+                this.saveData(data);
+                return id;
+            }
+
+            getTickets() {
+                return this.getData().tickets;
+            }
+
+            getTicketsByUser(userId) {
+                return this.getData().tickets.filter(t => t.userId === userId);
+            }
+
+            updateTicketStatus(id, status) {
+                const data = this.getData();
+                const ticket = data.tickets.find(t => t.id === id);
+                if (ticket) {
+                    ticket.status = status;
+                    this.saveData(data);
+                }
+            }
+
+            deleteTicket(id) {
+                const data = this.getData();
+                data.tickets = data.tickets.filter(t => t.id !== id);
+                this.saveData(data);
+            }
+        }
+
+        // ==================== UI MANAGER ====================
+        class UIManager {
+            constructor() {
+                this.dataManager = new DataManager();
+                this.currentUser = null;
+                this.currentRole = null;
+                this.setupEventListeners();
+            }
+
+            showToast(message, type = 'success') {
+                const toast = document.createElement('div');
+                toast.className = `toast ${type === 'error' ? 'error' : ''}`;
+                toast.textContent = message;
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 3000);
+            }
+
+            setupEventListeners() {
+                // Login
+                document.getElementById('loginForm').addEventListener('submit', (e) => this.handleLogin(e));
+
+                // Logout
+                document.querySelectorAll('.logout-btn').forEach(btn => {
+                    btn.addEventListener('click', () => this.handleLogout());
+                });
+
+                // Employee
+                document.getElementById('employeeTicketForm')?.addEventListener('submit', (e) => this.handleAddEmployeeTicket(e));
+                document.querySelectorAll('#employeePage .menu-link').forEach(link => {
+                    link.addEventListener('click', () => {
+                        document.querySelectorAll('#employeePage .menu-link').forEach(l => l.classList.remove('active'));
+                        link.classList.add('active');
+                    });
+                });
+
+                // Executive
+                document.querySelectorAll('#executivePage .menu-link').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        document.querySelectorAll('#executivePage .menu-link').forEach(l => l.classList.remove('active'));
+                        link.classList.add('active');
+                        const view = link.dataset.view;
+                        this.switchExecutiveView(view);
+                    });
+                });
+
+                // Admin
+                document.getElementById('adminAssetForm')?.addEventListener('submit', (e) => this.handleAddAsset(e));
+                document.getElementById('adminUserForm')?.addEventListener('submit', (e) => this.handleAddUser(e));
+                document.getElementById('editAssetForm')?.addEventListener('submit', (e) => this.handleEditAsset(e));
+                document.getElementById('editUserForm')?.addEventListener('submit', (e) => this.handleEditUser(e));
+                document.getElementById('closeEditAssetModal')?.addEventListener('click', () => this.closeModal('editAssetModal'));
+                document.getElementById('closeEditUserModal')?.addEventListener('click', () => this.closeModal('editUserModal'));
+
+                document.querySelectorAll('#adminPage .menu-link').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        document.querySelectorAll('#adminPage .menu-link').forEach(l => l.classList.remove('active'));
+                        link.classList.add('active');
+                        const tab = link.dataset.tab;
+                        this.switchAdminTab(tab);
+                    });
+                });
+            }
+
+            handleLogin(e) {
+                e.preventDefault();
+                const username = document.getElementById('username').value;
+                const role = document.getElementById('role').value;
+
+                if (!username || !role) {
+                    this.showToast('Please fill all fields', 'error');
+                    return;
+                }
+
+                this.currentUser = username;
+                this.currentRole = role;
+
+                localStorage.setItem('currentUser', username);
+                localStorage.setItem('currentRole', role);
+
+                document.getElementById('loginPage').style.display = 'none';
+                this.showPage(role);
+                this.initializePageContent(role);
+            }
+
+            handleLogout() {
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('currentRole');
+                this.currentUser = null;
+                this.currentRole = null;
+
+                document.querySelectorAll('[id*="Page"]').forEach(page => page.style.display = 'none');
+                document.getElementById('loginPage').style.display = 'flex';
+                document.getElementById('loginForm').reset();
+                this.showToast('Logged out successfully');
+            }
+
+            showPage(role) {
+                document.querySelectorAll('[id*="Page"]').forEach(page => page.style.display = 'none');
+                document.getElementById(`${role}Page`).style.display = 'flex';
+            }
+
+            initializePageContent(role) {
+                switch(role) {
+                    case 'employee':
+                        this.initEmployeePage();
+                        break;
+                    case 'executive':
+                        this.initExecutivePage();
+                        break;
+                    case 'admin':
+                        this.initAdminPage();
+                        break;
+                    case 'technician':
+                        this.initTechnicianPage();
+                        break;
+                }
+            }
+
+            // =============== EMPLOYEE PAGE ===============
+            initEmployeePage() {
+                document.getElementById('empUsername').textContent = this.currentUser;
+                document.getElementById('empRole').textContent = 'Employee';
+                this.loadEmployeeTickets();
+            }
+
+            handleAddEmployeeTicket(e) {
+                e.preventDefault();
+                const title = document.getElementById('ticketTitle').value;
+                const type = document.getElementById('ticketType').value;
+                const description = document.getElementById('ticketDescription').value;
+
+                this.dataManager.addTicket(this.currentUser, this.currentUser, title, type, description);
+                this.showToast('Ticket created successfully');
+                document.getElementById('employeeTicketForm').reset();
+                this.loadEmployeeTickets();
+            }
+
+            loadEmployeeTickets() {
+                const tickets = this.dataManager.getTicketsByUser(this.currentUser);
+                const tbody = document.getElementById('employeeTicketsList');
+
+                if (tickets.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-light);">No tickets yet</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = tickets.map(t => `
+                    <tr>
+                        <td>${t.title}</td>
+                        <td>${t.type === 'request' ? '📋 Request Asset' : '🔧 Repair'}</td>
+                        <td><span class="badge badge-${this.getStatusClass(t.status)}">${t.status}</span></td>
+                        <td>${t.dateCreated}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" onclick="uiManager.deleteEmployeeTicket(${t.id})">Delete</button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            deleteEmployeeTicket(id) {
+                if (confirm('Delete this ticket?')) {
+                    this.dataManager.deleteTicket(id);
+                    this.showToast('Ticket deleted');
+                    this.loadEmployeeTickets();
+                }
+            }
+
+            // =============== EXECUTIVE PAGE ===============
+            initExecutivePage() {
+                document.getElementById('execUsername').textContent = this.currentUser;
+                this.updateExecutiveDashboard();
+            }
+
+            updateExecutiveDashboard() {
+                const assets = this.dataManager.getAssets();
+                const tickets = this.dataManager.getTickets();
+
+                const totalAssets = assets.length;
+                const inUse = assets.filter(a => a.status === 'in-use').length;
+                const inRepair = assets.filter(a => a.status === 'repair').length;
+                const available = assets.filter(a => a.status === 'available').length;
+
+                document.getElementById('execTotalAssets').textContent = totalAssets;
+                document.getElementById('execInUse').textContent = inUse;
+                document.getElementById('execInRepair').textContent = inRepair;
+                document.getElementById('execAvailable').textContent = available;
+
+                // Category Chart
+                const categories = {};
+                assets.forEach(a => {
+                    categories[a.category] = (categories[a.category] || 0) + 1;
+                });
+
+                let categoryHTML = '<div class="chart-bar">';
+                Object.entries(categories).forEach(([cat, count]) => {
+                    const height = Math.max(50, count * 60);
+                    categoryHTML += `
+                        <div class="bar-item">
+                            <div class="bar" style="height: ${height}px;" title="${count} items"></div>
+                            <div class="bar-label">${cat.charAt(0).toUpperCase() + cat.slice(1)}</div>
+                            <div style="font-weight: 600; color: var(--text-dark);">${count}</div>
+                        </div>
+                    `;
+                });
+                categoryHTML += '</div>';
+                document.getElementById('execCategoryChart').innerHTML = categoryHTML;
+
+                // Tickets summary
+                const pending = tickets.filter(t => t.status === 'pending').length;
+                const progress = tickets.filter(t => t.status === 'in-progress').length;
+                const completed = tickets.filter(t => t.status === 'completed').length;
+
+                document.getElementById('execPendingTickets').textContent = pending;
+                document.getElementById('execProgressTickets').textContent = progress;
+                document.getElementById('execCompletedTickets').textContent = completed;
+
+                // Asset Report
+                const tbody = document.getElementById('execAssetReport');
+                tbody.innerHTML = assets.map(a => `
+                    <tr>
+                        <td>${a.name}</td>
+                        <td>${a.category.charAt(0).toUpperCase() + a.category.slice(1)}</td>
+                        <td><span class="badge badge-${this.getStatusClass(a.status)}">${a.status}</span></td>
+                        <td>${a.dateAdded}</td>
+                    </tr>
+                `).join('');
+            }
+
+            switchExecutiveView(view) {
+                if (view === 'dashboard') {
+                    document.getElementById('execDashboardView').style.display = 'block';
+                    document.getElementById('execReportsView').style.display = 'none';
+                } else {
+                    document.getElementById('execDashboardView').style.display = 'none';
+                    document.getElementById('execReportsView').style.display = 'block';
+                }
+            }
+
+            // =============== ADMIN PAGE ===============
+            initAdminPage() {
+                document.getElementById('adminUsername').textContent = this.currentUser;
+                this.switchAdminTab('assets');
+            }
+
+            switchAdminTab(tab) {
+                document.querySelectorAll('#adminPage .admin-tab').forEach(t => t.style.display = 'none');
+                document.getElementById(tab + 'Tab').style.display = 'block';
+
+                if (tab === 'assets') {
+                    this.loadAdminAssets();
+                } else if (tab === 'users') {
+                    this.loadAdminUsers();
+                } else if (tab === 'tickets') {
+                    this.loadAdminTickets();
+                }
+            }
+
+            handleAddAsset(e) {
+                e.preventDefault();
+                const name = document.getElementById('assetName').value;
+                const category = document.getElementById('assetCategory').value;
+                const status = document.getElementById('assetStatus').value;
+
+                this.dataManager.addAsset(name, category, status);
+                this.showToast('Asset added successfully');
+                document.getElementById('adminAssetForm').reset();
+                this.loadAdminAssets();
+            }
+
+            loadAdminAssets() {
+                const assets = this.dataManager.getAssets();
+                const tbody = document.getElementById('adminAssetsList');
+
+                if (assets.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-light);">No assets</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = assets.map(a => `
+                    <tr>
+                        <td>${a.name}</td>
+                        <td>${a.category.charAt(0).toUpperCase() + a.category.slice(1)}</td>
+                        <td><span class="badge badge-${this.getStatusClass(a.status)}">${a.status}</span></td>
+                        <td>${a.dateAdded}</td>
+                        <td>
+                            <button class="btn btn-accent btn-sm" onclick="uiManager.openEditAssetModal(${a.id})">Edit</button>
+                            <button class="btn btn-danger btn-sm" onclick="uiManager.deleteAsset(${a.id})">Delete</button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            openEditAssetModal(id) {
+                const asset = this.dataManager.getAssets().find(a => a.id === id);
+                if (asset) {
+                    document.getElementById('editAssetName').value = asset.name;
+                    document.getElementById('editAssetCategory').value = asset.category;
+                    document.getElementById('editAssetStatus').value = asset.status;
+                    document.getElementById('editAssetForm').dataset.id = id;
+                    this.openModal('editAssetModal');
+                }
+            }
+
+            handleEditAsset(e) {
+                e.preventDefault();
+                const id = parseInt(document.getElementById('editAssetForm').dataset.id);
+                const name = document.getElementById('editAssetName').value;
+                const category = document.getElementById('editAssetCategory').value;
+                const status = document.getElementById('editAssetStatus').value;
+
+                this.dataManager.updateAsset(id, name, category, status);
+                this.showToast('Asset updated successfully');
+                this.closeModal('editAssetModal');
+                this.loadAdminAssets();
+            }
+
+            deleteAsset(id) {
+                if (confirm('Delete this asset?')) {
+                    this.dataManager.deleteAsset(id);
+                    this.showToast('Asset deleted');
+                    this.loadAdminAssets();
+                }
+            }
+
+            handleAddUser(e) {
+                e.preventDefault();
+                const username = document.getElementById('userName').value;
+                const role = document.getElementById('userRole').value;
+
+                this.dataManager.addUser(username, role);
+                this.showToast('User added successfully');
+                document.getElementById('adminUserForm').reset();
+                this.loadAdminUsers();
+            }
+
+            loadAdminUsers() {
+                const users = this.dataManager.getUsers();
+                const tbody = document.getElementById('adminUsersList');
+
+                if (users.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--text-light);">No users</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = users.map(u => `
+                    <tr>
+                        <td>${u.username}</td>
+                        <td><span class="badge badge-pending">${u.role}</span></td>
+                        <td>${u.dateCreated}</td>
+                        <td>
+                            <button class="btn btn-accent btn-sm" onclick="uiManager.openEditUserModal(${u.id})">Edit</button>
+                            <button class="btn btn-danger btn-sm" onclick="uiManager.deleteUser(${u.id})">Delete</button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            openEditUserModal(id) {
+                const user = this.dataManager.getUsers().find(u => u.id === id);
+                if (user) {
+                    document.getElementById('editUserName').value = user.username;
+                    document.getElementById('editUserRole').value = user.role;
+                    document.getElementById('editUserForm').dataset.id = id;
+                    this.openModal('editUserModal');
+                }
+            }
+
+            handleEditUser(e) {
+                e.preventDefault();
+                const id = parseInt(document.getElementById('editUserForm').dataset.id);
+                const role = document.getElementById('editUserRole').value;
+
+                this.dataManager.updateUser(id, role);
+                this.showToast('User updated successfully');
+                this.closeModal('editUserModal');
+                this.loadAdminUsers();
+            }
+
+            deleteUser(id) {
+                if (confirm('Delete this user?')) {
+                    this.dataManager.deleteUser(id);
+                    this.showToast('User deleted');
+                    this.loadAdminUsers();
+                }
+            }
+
+            loadAdminTickets() {
+                const tickets = this.dataManager.getTickets();
+                const tbody = document.getElementById('adminTicketsList');
+
+                if (tickets.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-light);">No tickets</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = tickets.map(t => `
+                    <tr>
+                        <td>${t.username}</td>
+                        <td>${t.title}</td>
+                        <td>${t.type === 'request' ? '📋 Request' : '🔧 Repair'}</td>
+                        <td><span class="badge badge-${this.getStatusClass(t.status)}">${t.status}</span></td>
+                        <td>${t.dateCreated}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" onclick="uiManager.deleteAdminTicket(${t.id})">Delete</button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            deleteAdminTicket(id) {
+                if (confirm('Delete this ticket?')) {
+                    this.dataManager.deleteTicket(id);
+                    this.showToast('Ticket deleted');
+                    this.loadAdminTickets();
+                }
+            }
+
+            // =============== TECHNICIAN PAGE ===============
+            initTechnicianPage() {
+                document.getElementById('techUsername').textContent = this.currentUser;
+                this.loadTechnicianTickets();
+            }
+
+            loadTechnicianTickets() {
+                const tickets = this.dataManager.getTickets();
+                const tbody = document.getElementById('techTicketsList');
+
+                if (tickets.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-light);">No work orders</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = tickets.map(t => `
+                    <tr>
+                        <td>${t.username}</td>
+                        <td>${t.title}</td>
+                        <td>${t.type === 'request' ? '📋 Request' : '🔧 Repair'}</td>
+                        <td>${t.description}</td>
+                        <td><span class="badge badge-${this.getStatusClass(t.status)}">${t.status}</span></td>
+                        <td>
+                            <select onchange="uiManager.updateTicketStatus(${t.id}, this.value)" style="padding: 0.35rem; border-radius: 4px; border: 1px solid var(--border);">
+                                <option value="pending" ${t.status === 'pending' ? 'selected' : ''}>Pending</option>
+                                <option value="in-progress" ${t.status === 'in-progress' ? 'selected' : ''}>In Progress</option>
+                                <option value="completed" ${t.status === 'completed' ? 'selected' : ''}>Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            updateTicketStatus(id, status) {
+                this.dataManager.updateTicketStatus(id, status);
+                this.showToast('Status updated');
+                this.loadTechnicianTickets();
+            }
+
+            // =============== UTILITIES ===============
+            getStatusClass(status) {
+                const statusMap = {
+                    'pending': 'pending',
+                    'in-progress': 'progress',
+                    'completed': 'completed',
+                    'available': 'available',
+                    'in-use': 'in-use',
+                    'repair': 'repair'
+                };
+                return statusMap[status] || 'pending';
+            }
+
+            openModal(modalId) {
+                document.getElementById(modalId).classList.add('active');
+            }
+
+            closeModal(modalId) {
+                document.getElementById(modalId).classList.remove('active');
+            }
+        }
+
+        // Initialize
+        let uiManager;
+        document.addEventListener('DOMContentLoaded', () => {
+            uiManager = new UIManager();
+
+            // Check if user is already logged in
+            const savedUser = localStorage.getItem('currentUser');
+            const savedRole = localStorage.getItem('currentRole');
+            if (savedUser && savedRole) {
+                uiManager.currentUser = savedUser;
+                uiManager.currentRole = savedRole;
+                document.getElementById('loginPage').style.display = 'none';
+                uiManager.showPage(savedRole);
+                uiManager.initializePageContent(savedRole);
+            }
+        });
+
+        // Close modals on background click
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
